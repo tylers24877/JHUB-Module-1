@@ -12,11 +12,12 @@ import { ForceItem } from "../../interfaces/ForceItem";
 
 interface CustomSelectionProps {
   data: ForceItem[];
+  loading: boolean;
   label: string;
   selectionChangeCallback?: (selectedItem: string) => void;
 }
 export const CustomSelection = (props: CustomSelectionProps) => {
-  const { data, label, selectionChangeCallback } = props;
+  const { data, loading, label, selectionChangeCallback } = props;
 
   const [selectedItem, setSelectedItem] = useState<string>("");
 
