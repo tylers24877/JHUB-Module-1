@@ -2,7 +2,8 @@ import { useState, useEffect, useCallback } from "react";
 import { ForceItem } from "../interfaces/ForceItem";
 import { StopAndSearchData } from "../interfaces/StopAndSearch";
 import { LoadingState } from "../interfaces/LoadingState";
-import { error } from "../interfaces/Error";
+import { Error } from "../interfaces/Error";
+import { Dayjs } from "dayjs";
 
 /**
  * Custom hook for fetching police data.
@@ -18,7 +19,8 @@ const usePoliceData = () => {
     forceList: true,
     stopAndSearch: false,
   });
-  const [error, setError] = useState<error>(null);
+
+  const [error, setError] = useState<Error>(null);
 
   /**
    * Fetches the list of police forces from the API.
@@ -42,8 +44,9 @@ const usePoliceData = () => {
   /**
    * Fetches stop and search data from the police API for a specific force.
    * @param forceId - The ID of the force for which to fetch the data.
+   * @param date - The date for which to fetch the data.
    */
-  const refetch = async (forceId: string) => {
+  const refetch = async (forceId: string, date: Dayjs) => {
     if (!forceId) {
       return;
     }
@@ -51,7 +54,9 @@ const usePoliceData = () => {
     setLoading((prevLoading) => ({ ...prevLoading, stopAndSearch: true }));
     try {
       const response = await fetch(
-        `https://data.police.uk/api/stops-force?force=${forceId}`
+        `https://data.police.uk/api/stops-force?force=${forceId}&date=${date.format(
+          "YYYY-MM"
+        )}`
       );
       setLoading((prevLoading) => ({
         ...prevLoading,
@@ -70,7 +75,13 @@ const usePoliceData = () => {
     getForceList();
   }, [getForceList]);
 
-  return { forceList, stopAndSearchData, refetch, loading, error };
+  return {
+    forceList,
+    stopAndSearchData,
+    refetch,
+    loading,
+    error,
+  };
 };
 
 export { usePoliceData };

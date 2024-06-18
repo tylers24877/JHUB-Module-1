@@ -1,9 +1,9 @@
 import { Fragment } from "react/jsx-runtime";
-import { error } from "../interfaces/Error";
+import { Error } from "../interfaces/Error";
 import { Alert, Snackbar } from "@mui/material";
 import { useState, useEffect } from "react";
 
-const CustomErrorAlert = ({ error }: { error: error }) => {
+const useErrorAlert = (error: Error) => {
   const [isDisplaying, setDisplaying] = useState<boolean>(false);
 
   useEffect(() => {
@@ -14,6 +14,12 @@ const CustomErrorAlert = ({ error }: { error: error }) => {
     }
   }, [error]);
 
+  return { isDisplaying, setDisplaying };
+};
+
+const CustomErrorAlert = ({ error }: { error: Error }) => {
+  const { isDisplaying, setDisplaying } = useErrorAlert(error);
+
   return (
     <Fragment>
       <Snackbar
@@ -21,6 +27,7 @@ const CustomErrorAlert = ({ error }: { error: error }) => {
         autoHideDuration={5000}
         ClickAwayListenerProps={{ onClickAway: () => null }}
         onClick={() => setDisplaying(false)}
+        onClose={() => setDisplaying(false)}
         anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
       >
         <Alert severity="error" sx={{ mb: 2 }}>

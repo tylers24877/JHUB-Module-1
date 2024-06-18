@@ -4,37 +4,29 @@ import {
   Select,
   OutlinedInput,
   MenuItem,
-  SelectChangeEvent,
 } from "@mui/material";
-import { useState } from "react";
 import { Fragment } from "react/jsx-runtime";
 import { ForceItem } from "../../interfaces/ForceItem";
+import useCustomSelection from "./CustomSelectionHelper";
 
 interface CustomSelectionProps {
   data: ForceItem[];
-  loading: boolean;
   label: string;
-  selectionChangeCallback?: (selectedItem: string) => void;
+  value: string;
+  setValue: (value: string) => void;
 }
+
 export const CustomSelection = (props: CustomSelectionProps) => {
-  const { data, loading, label, selectionChangeCallback } = props;
+  const { data, label, value, setValue } = props;
 
-  const [selectedItem, setSelectedItem] = useState<string>("");
-
-  const handleChange = (event: SelectChangeEvent<typeof selectedItem>) => {
-    const { value } = event.target;
-    setSelectedItem(value as string);
-    if (selectionChangeCallback) {
-      selectionChangeCallback(value as string);
-    }
-  };
+  const { handleChange } = useCustomSelection(setValue);
 
   return (
     <Fragment>
       <FormControl sx={{ width: 300, textAlign: "left" }}>
         <InputLabel>{label}</InputLabel>
         <Select
-          value={selectedItem}
+          value={value}
           onChange={handleChange}
           input={<OutlinedInput label={label} />}
         >
